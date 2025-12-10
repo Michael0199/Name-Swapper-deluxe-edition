@@ -1,41 +1,34 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-
+using namespace std;
 int main() {
-    // Open Names.txt for reading
-    std::ifstream input("Names.txt");
-    if (!input.is_open()) {
-        std::cerr << "Error opening Names.txt" << std::endl;
-        return 1;
-    }
-    // Open Swapped.txt for writing
-    std::ofstream output("Swapped.txt");
-    if (!output.is_open()) {
-        std::cerr << "Error opening Swapped.txt" << std::endl;
-        input.close();
-        return 1;
-    }
-    std::string line;
-    // Loop until no more lines to read
-    while (std::getline(input, line)) {
-        // Find the position of the first space
-        size_t spacePos = line.find(' ');
-        if (spacePos != std::string::npos) {
-            // Extract Fname (first string until space)
-            std::string Fname = line.substr(0, spacePos);
-            // Extract the rest after the space
-            std::string rest = line.substr(spacePos + 1);
-            // Print rest, add comma, then Fname, and a new line
-            output << rest << ", " << Fname << std::endl;
-        } else {
-            // If no space, just output the line as is (though this might not happen per constraints)
-            output << line << std::endl;
+    ifstream in("Names.txt");
+    ofstream out("Swapped.txt");
+    string line;
+    
+    while (getline(in, line)) {
+        size_t space_pos = line.find(' ');
+        if (space_pos == string::npos) continue; // Skip lines without space
+        
+        string Fname = line.substr(0, space_pos);
+        string S = line.substr(space_pos + 1);
+        
+        // Check for quotes in S
+        size_t quote1 = S.find('"');
+        if (quote1 != string::npos) {
+            size_t quote2 = S.find('"', quote1 + 1);
+            if (quote2 != string::npos) {
+                // Ignore the string value between the quotes (including quotes)
+                S.erase(quote1, quote2 - quote1 + 1);
+            }
         }
+        
+        // Print the rest of the line (S) and add a comma, then Fname and a new line
+        out << S << "," << Fname << endl;
     }
-    // Close both files
-    input.close();
-    output.close();
-
-   return 0;
+    
+    in.close();
+    out.close();
+    return 0;
 }
