@@ -17,7 +17,8 @@ int main() {
         // Trim leading spaces
         size_t start = line.find_first_not_of(" \t");
         if (start == std::string::npos) {
-            // Empty line, skip
+            // Blank line, add a new line to output
+            outputFile << std::endl;
             continue;
         }
         line = line.substr(start);
